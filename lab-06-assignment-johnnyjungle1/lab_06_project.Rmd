@@ -1,0 +1,227 @@
+---
+title: 'put the title of your project here'
+subtitle: "Lab #6 Report"
+author: "put your name here"
+date: "Due March 12 2020"
+bibliography: "lab_06.bib" # this line tells RMarkdown which file to use for the bibliography
+fontsize: 12pt
+output: 
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+    include:
+      in_header: "ees3310.sty" # This line just tells RMarkdown to use a style file to format the PDF file with Times Roman font.
+  github_document:
+    toc: yes
+---
+```{r setup, include=FALSE}
+knitr::knit_hooks$set(inline = function(x) { knitr:::format_sci(x, 'md')})
+knitr::opts_chunk$set(echo = TRUE)
+
+# This section loads necessary R libraries and sources scripts that define 
+# useful functions format_md.
+# 
+data_dir = "_data"
+script_dir = "_scripts"
+
+if (!dir.exists(data_dir)) dir.create(data_dir)
+
+library(pacman)
+
+# Load all of the following packages.
+# Install any missing packages.
+p_load(zoo, scales, tidyverse, lubridate)
+
+# This sets the default style for ggplot
+theme_set(theme_bw(base_size = 15))
+
+# This is the URL for downloading CO2 data from Mauna Loa
+mlo_url = "https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/in_situ_co2/monthly/monthly_in_situ_co2_mlo.csv"
+
+# This is the URL for downloading global temperature data from NASA's
+# Goddard Institute for Space Studies (GISS).
+giss_url = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv"
+
+# Load basic utility scripts
+source(file.path(script_dir, "utils.R"), chdir = T)
+
+# Load scripts for running and plotting MODTRAN
+# You can delete this line if you will not be using MODTRAN
+source(file.path(script_dir, "modtran.R"), chdir = T)
+source(file.path(script_dir, "rrtm.R"), chdir = T)
+```
+
+
+TROPICAL ATMOSPHERE
+``` {r tropical atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_tropical_baseline.txt", co2_ppm = 400, atmosphere="Tropical")
+modtran_tropical_baseline=read_modtran("_data/modtran_tropical_baseline.txt")
+tropicalbaseline_i_out=modtran_tropical_baseline$i_out
+tropicalbaseline_i_out
+plot_modtran("_data/modtran_tropical_baseline.txt")
+
+run_modtran(filename = "_data/modtran_tropical_increaseco2.txt", co2_ppm = 800, atmosphere="Tropical")
+modtran_tropical_increaseco2=read_modtran("_data/modtran_tropical_increaseco2.txt")
+tropicalincreaseco2_i_out=modtran_tropical_increaseco2$i_out
+tropicalincreaseco2_i_out
+plot_modtran("_data/modtran_tropical_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_tropical_restore_watvap.txt", co2_ppm = 800, atmosphere="Tropical", h2o_fixed = "vapor pressure", delta_t = 0.76)
+modtran_tropical_restore_watvap=read_modtran("_data/modtran_tropical_restore_watvap.txt")
+tropicalrestorewatvap_i_out=modtran_tropical_restore_watvap$i_out
+tropicalrestorewatvap_i_out
+
+
+run_modtran(filename = "_data/modtran_tropical_restorehum.txt", co2_ppm = 800, atmosphere="Tropical", h2o_fixed = "relative humidity", delta_t = 1.21)
+modtran_tropical_restorehum=read_modtran("_data/modtran_tropical_restorehum.txt")
+tropicalrestorehum_i_out=modtran_tropical_restorehum$i_out
+tropicalrestorehum_i_out
+
+```
+
+
+MIDLATITUDE SUMMER
+``` {r midlatitudesummer atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_mlsummer_baseline.txt", co2_ppm = 400, atmosphere="midlatitude summer")
+modtran_mlsummer_baseline=read_modtran("_data/modtran_mlsummer_baseline.txt")
+mlsummerbaseline_i_out=modtran_mlsummer_baseline$i_out
+mlsummerbaseline_i_out
+plot_modtran("_data/modtran_mlsummer_baseline.txt")
+
+run_modtran(filename = "_data/modtran_mlsummer_increaseco2.txt", co2_ppm = 800, atmosphere="midlatitude summer")
+modtran_mlsummer_increaseco2=read_modtran("_data/modtran_mlsummer_increaseco2.txt")
+mlsummerincreaseco2_i_out=modtran_mlsummer_increaseco2$i_out
+mlsummerincreaseco2_i_out
+plot_modtran("_data/modtran_mlsummer_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_mlsummer_restore_watvap.txt", co2_ppm = 800, atmosphere="midlatitude summer", h2o_fixed = "vapor pressure", delta_t = 0.715)
+modtran_mlsummer_restore_watvap=read_modtran("_data/modtran_mlsummer_restore_watvap.txt")
+mlsummerrestorewatvap_i_out=modtran_mlsummer_restore_watvap$i_out
+mlsummerrestorewatvap_i_out
+
+
+run_modtran(filename = "_data/modtran_mlsummer_restorehum.txt", co2_ppm = 800, atmosphere="midlatitude summer", h2o_fixed = "relative humidity", delta_t = 1.03)
+modtran_mlsummer_restorehum=read_modtran("_data/modtran_mlsummer_restorehum.txt")
+mlsummerrestorehum_i_out=modtran_mlsummer_restorehum$i_out
+mlsummerrestorehum_i_out
+
+```
+
+
+MIDLATITUDE WINTER
+``` {r midlatitudewinter atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_mlwinter_baseline.txt", co2_ppm = 400, atmosphere="midlatitude winter")
+modtran_mlwinter_baseline=read_modtran("_data/modtran_mlwinter_baseline.txt")
+mlwinterbaseline_i_out=modtran_mlwinter_baseline$i_out
+mlwinterbaseline_i_out
+plot_modtran("_data/modtran_mlwinter_baseline.txt")
+
+run_modtran(filename = "_data/modtran_mlwinter_increaseco2.txt", co2_ppm = 800, atmosphere="midlatitude winter")
+modtran_mlwinter_increaseco2=read_modtran("_data/modtran_mlwinter_increaseco2.txt")
+mlwinterincreaseco2_i_out=modtran_mlwinter_increaseco2$i_out
+mlwinterincreaseco2_i_out
+plot_modtran("_data/modtran_mlwinter_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_mlwinter_restore_watvap.txt", co2_ppm = 800, atmosphere="midlatitude winter", h2o_fixed = "vapor pressure", delta_t = 0.653)
+modtran_mlwinter_restore_watvap=read_modtran("_data/modtran_mlwinter_restore_watvap.txt")
+mlwinterrestorewatvap_i_out=modtran_mlwinter_restore_watvap$i_out
+mlwinterrestorewatvap_i_out
+
+
+run_modtran(filename = "_data/modtran_mlwinter_restorehum.txt", co2_ppm = 800, atmosphere="midlatitude winter", h2o_fixed = "relative humidity", delta_t = 0.83)
+modtran_mlwinter_restorehum=read_modtran("_data/modtran_mlwinter_restorehum.txt")
+mlwinterrestorehum_i_out=modtran_mlwinter_restorehum$i_out
+mlwinterrestorehum_i_out
+
+```
+
+
+SUBARCTIC SUMMER
+``` {r subarcticsummer atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_subsum_baseline.txt", co2_ppm = 400, atmosphere="subarctic summer")
+modtran_subsum_baseline=read_modtran("_data/modtran_subsum_baseline.txt")
+subsumbaseline_i_out=modtran_subsum_baseline$i_out
+subsumbaseline_i_out
+plot_modtran("_data/modtran_subsum_baseline.txt")
+
+run_modtran(filename = "_data/modtran_subsum_increaseco2.txt", co2_ppm = 800, atmosphere="subarctic summer")
+modtran_subsum_increaseco2=read_modtran("_data/modtran_subsum_increaseco2.txt")
+subsumincreaseco2_i_out=modtran_subsum_increaseco2$i_out
+subsumincreaseco2_i_out
+plot_modtran("_data/modtran_subsum_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_subsum_restore_watvap.txt", co2_ppm = 800, atmosphere="subarctic summer", h2o_fixed = "vapor pressure", delta_t = 0.6)
+modtran_subsum_restore_watvap=read_modtran("_data/modtran_subsum_restore_watvap.txt")
+subsumrestorewatvap_i_out=modtran_subsum_restore_watvap$i_out
+subsumrestorewatvap_i_out
+
+run_modtran(filename = "_data/modtran_subsum_restorehum.txt", co2_ppm = 800, atmosphere="subarctic summer", h2o_fixed = "relative humidity", delta_t = 0.83)
+modtran_subsum_restorehum=read_modtran("_data/modtran_subsum_restorehum.txt")
+subsumrestorehum_i_out=modtran_subsum_restorehum$i_out
+subsumrestorehum_i_out
+
+```
+
+
+SUBARCTIC WINTER
+``` {r subarcticwinter atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_subwint_baseline.txt", co2_ppm = 400, atmosphere="subarctic winter")
+modtran_subwint_baseline=read_modtran("_data/modtran_subwint_baseline.txt")
+subwintbaseline_i_out=modtran_subwint_baseline$i_out
+subwintbaseline_i_out
+plot_modtran("_data/modtran_subwint_baseline.txt")
+
+run_modtran(filename = "_data/modtran_subwint_increaseco2.txt", co2_ppm = 800, atmosphere="subarctic winter")
+modtran_subwint_increaseco2=read_modtran("_data/modtran_subwint_increaseco2.txt")
+subwintincreaseco2_i_out=modtran_subwint_increaseco2$i_out
+subwintincreaseco2_i_out
+plot_modtran("_data/modtran_subwint_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_subwint_restore_watvap.txt", co2_ppm = 800, atmosphere="subarctic winter", h2o_fixed = "vapor pressure", delta_t = 0.54)
+modtran_subwint_restore_watvap=read_modtran("_data/modtran_subwint_restore_watvap.txt")
+subwintrestorewatvap_i_out=modtran_subwint_restore_watvap$i_out
+subwintrestorewatvap_i_out
+
+run_modtran(filename = "_data/modtran_subwint_restorehum.txt", co2_ppm = 800, atmosphere="subarctic winter", h2o_fixed = "relative humidity", delta_t = 0.64)
+modtran_subwint_restorehum=read_modtran("_data/modtran_subwint_restorehum.txt")
+subwintrestorehum_i_out=modtran_subwint_restorehum$i_out
+subwintrestorehum_i_out
+
+```
+
+
+1976 STANDARD US ATMOSPHERE
+``` {r 1976us atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_nineteen76us_baseline.txt", co2_ppm = 400, atmosphere="standard")
+modtran_nineteen76us_baseline=read_modtran("_data/modtran_nineteen76us_baseline.txt")
+nineteen76usbaseline_i_out=modtran_nineteen76us_baseline$i_out
+nineteen76usbaseline_i_out
+plot_modtran("_data/modtran_nineteen76us_baseline.txt")
+
+run_modtran(filename = "_data/modtran_nineteen76us_increaseco2.txt", co2_ppm = 800, atmosphere="standard")
+modtran_nineteen76us_increaseco2=read_modtran("_data/modtran_nineteen76us_increaseco2.txt")
+nineteen76usincreaseco2_i_out=modtran_nineteen76us_increaseco2$i_out
+nineteen76usincreaseco2_i_out
+plot_modtran("_data/modtran_nineteen76us_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_nineteen76us_restore_watvap.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "vapor pressure", delta_t = 0.75)
+modtran_nineteen76us_restore_watvap=read_modtran("_data/modtran_nineteen76us_restore_watvap.txt")
+nineteen76usrestorewatvap_i_out=modtran_nineteen76us_restore_watvap$i_out
+nineteen76usrestorewatvap_i_out
+
+run_modtran(filename = "_data/modtran_nineteen76us_restorehum.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "relative humidity", delta_t = 1.06)
+modtran_nineteen76us_restorehum=read_modtran("_data/modtran_nineteen76us_restorehum.txt")
+nineteen76usrestorehum_i_out=modtran_nineteen76us_restorehum$i_out
+nineteen76usrestorehum_i_out
+
+```
+
+
+[o]  [o]
+
+   uu
+   
+/------\
+\--UU--/
+YUM
