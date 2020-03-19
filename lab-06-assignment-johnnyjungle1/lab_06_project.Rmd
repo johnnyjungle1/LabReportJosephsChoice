@@ -53,6 +53,32 @@ source(file.path(script_dir, "rrtm.R"), chdir = T)
 ```
 
 
+1976 STANDARD US ATMOSPHERE
+``` {r 1976us atmosphere, include = TRUE}
+run_modtran(filename = "_data/modtran_nineteen76us_baseline.txt", co2_ppm = 400, atmosphere="standard")
+modtran_nineteen76us_baseline=read_modtran("_data/modtran_nineteen76us_baseline.txt")
+nineteen76usbaseline_i_out=modtran_nineteen76us_baseline$i_out
+nineteen76usbaseline_i_out
+plot_modtran("_data/modtran_nineteen76us_baseline.txt")
+
+run_modtran(filename = "_data/modtran_nineteen76us_increaseco2.txt", co2_ppm = 800, atmosphere="standard")
+modtran_nineteen76us_increaseco2=read_modtran("_data/modtran_nineteen76us_increaseco2.txt")
+nineteen76usincreaseco2_i_out=modtran_nineteen76us_increaseco2$i_out
+nineteen76usincreaseco2_i_out
+plot_modtran("_data/modtran_nineteen76us_increaseco2.txt")
+
+run_modtran(filename = "_data/modtran_nineteen76us_restore_watvap.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "vapor pressure", delta_t = 0.75)
+modtran_nineteen76us_restore_watvap=read_modtran("_data/modtran_nineteen76us_restore_watvap.txt")
+nineteen76usrestorewatvap_i_out=modtran_nineteen76us_restore_watvap$i_out
+nineteen76usrestorewatvap_i_out
+
+run_modtran(filename = "_data/modtran_nineteen76us_restorehum.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "relative humidity", delta_t = 1.06)
+modtran_nineteen76us_restorehum=read_modtran("_data/modtran_nineteen76us_restorehum.txt")
+nineteen76usrestorehum_i_out=modtran_nineteen76us_restorehum$i_out
+nineteen76usrestorehum_i_out
+
+```
+
 TROPICAL ATMOSPHERE
 ``` {r tropical atmosphere, include = TRUE}
 run_modtran(filename = "_data/modtran_tropical_baseline.txt", co2_ppm = 400, atmosphere="Tropical")
@@ -190,31 +216,17 @@ subwintrestorehum_i_out
 
 ```
 
+```{r tibblefuck.hard, include = TRUE}
 
-1976 STANDARD US ATMOSPHERE
-``` {r 1976us atmosphere, include = TRUE}
-run_modtran(filename = "_data/modtran_nineteen76us_baseline.txt", co2_ppm = 400, atmosphere="standard")
-modtran_nineteen76us_baseline=read_modtran("_data/modtran_nineteen76us_baseline.txt")
-nineteen76usbaseline_i_out=modtran_nineteen76us_baseline$i_out
-nineteen76usbaseline_i_out
-plot_modtran("_data/modtran_nineteen76us_baseline.txt")
-
-run_modtran(filename = "_data/modtran_nineteen76us_increaseco2.txt", co2_ppm = 800, atmosphere="standard")
-modtran_nineteen76us_increaseco2=read_modtran("_data/modtran_nineteen76us_increaseco2.txt")
-nineteen76usincreaseco2_i_out=modtran_nineteen76us_increaseco2$i_out
-nineteen76usincreaseco2_i_out
-plot_modtran("_data/modtran_nineteen76us_increaseco2.txt")
-
-run_modtran(filename = "_data/modtran_nineteen76us_restore_watvap.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "vapor pressure", delta_t = 0.75)
-modtran_nineteen76us_restore_watvap=read_modtran("_data/modtran_nineteen76us_restore_watvap.txt")
-nineteen76usrestorewatvap_i_out=modtran_nineteen76us_restore_watvap$i_out
-nineteen76usrestorewatvap_i_out
-
-run_modtran(filename = "_data/modtran_nineteen76us_restorehum.txt", co2_ppm = 800, atmosphere="standard", h2o_fixed = "relative humidity", delta_t = 1.06)
-modtran_nineteen76us_restorehum=read_modtran("_data/modtran_nineteen76us_restorehum.txt")
-nineteen76usrestorehum_i_out=modtran_nineteen76us_restorehum$i_out
-nineteen76usrestorehum_i_out
-
+frame_data (
+  ~"Atmosphere",~"I_out with 400 ppm CO2",~"I_out with 800 ppm CO2",~"Stabilizing delta_t under fixed water vapor",~"Stabilizing delta_t under fixed relative humidity",
+  "1976 Standard U.S.", nineteen76usbaseline_i_out, nineteen76usincreaseco2_i_out, 0.75, 1.06,
+  "Tropical", tropicalbaseline_i_out, tropicalincreaseco2_i_out, 0.76, 1.21,
+  "Midlatitude Summer", mlsummerbaseline_i_out, mlsummerincreaseco2_i_out, 0.715, 1.03,
+  "Midlatitude Winter", mlwinterbaseline_i_out, mlwinterincreaseco2_i_out, 0.653, 0.83,
+  "Subarctic Summer", subsumbaseline_i_out, subsumincreaseco2_i_out, 0.6, 0.83,
+  "Subarctic Winter", subwintbaseline_i_out, subwintincreaseco2_i_out, 0.54, 0.64
+)
 ```
 
 
